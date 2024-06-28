@@ -192,8 +192,7 @@ def agregar_restricciones(prob, instancia):
         sentidos.append('E')  # 'E' para igualdad
         rhs.append(float(instancia.ordenes[j].cant_trab))  
         nombres.append(f"trabajadores_necesarios_orden_{j}")    
-   
-    #Agrego las restriccion de que una orden se realiza en un solo turno, una sola vez
+#Agrego las restriccion de que una orden se realiza en un solo turno, una sola vez
     for j in range(O):
         indices = []
         valores = []
@@ -206,8 +205,7 @@ def agregar_restricciones(prob, instancia):
         sentidos.append('L')  # 'L' para menor o igual
         rhs.append(1)
         nombres.append(f"la orden {j} se realiza en un solo turno, una sola vez")
-
-    #Ningun trabajador hace dos ordenes al mismo tiempo. Usamos linealizacion
+   #Ningun trabajador hace dos ordenes al mismo tiempo. Usamos linealizacion
       # Restriccion 1
     for i in range(T):
       for j in range(O):
@@ -248,8 +246,7 @@ def agregar_restricciones(prob, instancia):
           sentidos.append('L')  # 'L' para menor o igual
           rhs.append(1)
           nombres.append("ningun trabajador hace dos ordenes al mismo tiempo (restriccion 3)")
-            
-    # Ningun trabajador puede trabajar los 6 dias de la semana
+# Ningun trabajador puede trabajar los 6 dias de la semana
       # Restriccion 1
     for i in range(T):
       for k in range(K):
@@ -292,7 +289,6 @@ def agregar_restricciones(prob, instancia):
       sentidos.append('L')
       rhs.append(5)
       nombres.append("Ningun trabajador puede trabajar los 6 dias de la semana (restriccion 3)")
-
     # Ningun trabajador puede trabajar los 5 turnos en un dia
     for i in range(T):
       for k in range(K):
@@ -307,8 +303,7 @@ def agregar_restricciones(prob, instancia):
         sentidos.append('L')
         rhs.append(4)
         nombres.append("Ningun trabajador puede trabajar los 5 turnos en un dia")
-
-  # Órdenes que no pueden ser resueltas en turnos consecutivos por un trabajador
+      # Órdenes que no pueden ser resueltas en turnos consecutivos por un trabajador
     for (j,j_) in instancia.ordenes_conflictivas:
       # Restriccion 1
       for i in range(T):
@@ -332,7 +327,6 @@ def agregar_restricciones(prob, instancia):
             sentidos.append('L')
             rhs.append(1)
             nombres.append(f"Restriccion de orden conflictiva {j} con {j_} (restriccion 2)")
-
   # Orden con ti trabajadores asignados en un mismo turno
     for j in range(O):
        for k in range(K):
@@ -347,143 +341,40 @@ def agregar_restricciones(prob, instancia):
             sentidos.append('E')
             rhs.append(0)
             nombres.append(f"Orden {i} con t_{i} trabajadores asignados en el mismo turno")
-
   # Diferencia entre trabajador que mas y menos tareas realizaron menor a 8
     # Restriccion de diferencia entre el trabajador que mas tareas realizo y el que menos
       # Restriccion con menor o igual
     for i in range(T):
       for i_ in range(T):
-        if i_!= i:
-          # Restriccion con mayor o iguak
-          indices = []
-          valores = []
-          for j in range(O):
-            indices.append(f"delta_{i}_{j}")
-            indices.append(f"delta_{i_}_{j}")
-            valores.append(1)
-            valores.append(-1)
-          fila = [indices,valores]
-          restricciones.append(fila)
-          sentidos.append('G')
-          rhs.append(-8)
-          nombres.append(f"Diferencia mayor o igual a -8 para {i} y {i_}")  
+        indices = []
+        valores = []
+        for j in range(O):
+          indices.append(f"delta_{i}_{j}")
+          indices.append(f"delta_{i_}_{j}")
+          valores.append(1)
+          valores.append(-1)
+        fila = [indices,valores]
+        restricciones.append(fila)
+        sentidos.append('G')
+        rhs.append(-8)
+        nombres.append(f"Diferencia mayor o igual a -8 para {i} y {i_}")  
 
-          # Restriccion con menor igual 
-          indices = []
-          valores = []
-          for j in range(O):
-            indices.append(f"delta_{i}_{j}")
-            indices.append(f"delta_{i_}_{j}")
-            valores.append(1)
-            valores.append(-1)
-          fila = [indices,valores]
-          restricciones.append(fila)
-          sentidos.append('L')
-          rhs.append(8)
-          nombres.append(f"Diferencia menor o igual a 8 para {i} y {i_}")
-      
-
-  # Sueldo
-    # Restriccion 1
+      # Restriccion con mayor o igual
     for i in range(T):
-      # 5 * gamma_i^1 <= c_i^1
-      indices = [f"gamma_{i}_1", f"c_{i}_1"]
-      valores = [-5,1]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('G')
-      rhs.append(0)
-      nombres.append(f"Sueldo_(restriccion_1.1)_{i}")
-      
-      # c_i^1 <= 5
-      indices = [f"c_{i}_1"]
-      valores = [1]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('L')
-      rhs.append(5)
-      nombres.append(f"Sueldo_(restriccion_1.2)_{i}")
-
-    # Restriccion 2
-    for i in range(T):
-      # 5 * gamma_i^2 <= c_i^2
-      indices = [f"gamma_{i}_2", f"c_{i}_2"]
-      valores = [-5,1]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('G')
-      rhs.append(0)
-      nombres.append(f"Sueldo (restriccion 2.1)_{i}")
-
-      # c_i^2 <= 5 * gamma_i^1
-      indices = [f"c_{i}_2", f"gamma_{i}_1"]
-      valores = [1, -5]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('L')
-      rhs.append(0)
-      nombres.append(f"Sueldo (restriccion 2.2)_{i}")
-
-    # Restriccion 3
-    for i in range(T):
-      # 5 * gamma_i^3 <= c_i^3
-      indices = [f"gamma_{i}_3", f"c_{i}_3"]
-      valores = [-5,1]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('G')
-      rhs.append(0)
-      nombres.append(f"Sueldo (restriccion 3.1)_{i}")
-      
-      # c_i^3 <= 5 * gamma_i^2
-      indices = [f"c_{i}_3", f"gamma_{i}_2"]
-      valores = [1, -5]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('L')
-      rhs.append(0)
-      nombres.append(f"Sueldo (restriccion 3.2)_{i}")
-
-    # Restriccion 4
-    for i in range(T):
-      indices = [f"c_{i}_4",f"gamma_{i}_3"]
-      valores = [1, -O]
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('L')
-      rhs.append(0)
-      nombres.append(f"Sueldo (restriccion 4)_{i}")
-    
-    # Restriccion 5
-
-    for i in range(T):
-      indices = []
-      valores = []
-      for n in range(1,5):
-        indices.append(f"c_{i}_{n}")
-        valores.append(1)
-      for j in range(O):
-        indices.append(f"delta_{i}_{j}")
-        valores.append(-1)
-      fila = [indices,valores]
-      restricciones.append(fila)
-      sentidos.append('E')
-      rhs.append(0)
-      nombres.append(f"Sueldo (restriccion 5)_{i}")
-      
-
-    # Ordenes correlativas
-    for (j,j_) in instancia.ordenes_correlativas:
-      for k in range(K):
-        for l in range(L-1): #Agrego -1 para que no se vaya de rango
-          indices = [f"alfa_{j}_{k}_{l}",f"alfa_{j_}_{k}_{l+1}"]
-          valores = [1,-1]
-          fila = [indices,valores]
-          restricciones.append(fila)
-          sentidos.append('L')
-          rhs.append(0)
-          nombres.append(f"Restriccion de orden correlativa {j} con {j_}")
-
+      for i_ in range(T):
+        indices = []
+        valores = []
+        for j in range(O):
+          indices.append(f"delta_{i}_{j}")
+          indices.append(f"delta_{i_}_{j}")
+          valores.append(1)
+          valores.append(-1)
+        fila = [indices,valores]
+        restricciones.append(fila)
+        sentidos.append('L')
+        rhs.append(8)
+        nombres.append(f"Diferencia menor o igual a 8")
+  
 # Deseables 
 # Conflictos entre trabajadores
 # Pares de órdenes repetitivas
@@ -548,7 +439,7 @@ def main():
     resolver_lp(prob)
 
     # Obtencion de la solucion
-    mostrar_solucion(prob,instancia)
+    #mostrar_solucion(prob,instancia)
 
 if __name__ == '__main__':
     main()
