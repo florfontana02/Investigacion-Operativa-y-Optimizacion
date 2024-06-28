@@ -470,7 +470,7 @@ def agregar_restricciones(prob, instancia):
       sentidos.append('E')
       rhs.append(0)
       nombres.append(f"Sueldo (restriccion 5)_{i}")
-      
+       
 
     # Ordenes correlativas
     for (j,j_) in instancia.ordenes_correlativas:
