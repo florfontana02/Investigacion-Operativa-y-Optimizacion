@@ -2,6 +2,7 @@ import sys
 #importamos el modulo cplex
 import cplex
 from recordclass import recordclass
+import time
 
 TOLERANCE =10e-6 
 Orden = recordclass('Orden', 'id beneficio cant_trab')
@@ -180,17 +181,21 @@ def agregar_restricciones(prob, instancia):
     rhs = []
     nombres = []
 
-    #Agrego las restricciones de la cantidad de trabajadores necesaria para cada tarea
+    #restriccion de que si realizo la orden j, me aseguro que tenga los t_j trabajadores que requiere
     for j in range(O):
         indices = []
         valores = []
         for i in range(T):
             indices.append(f"delta_{i}_{j}")
             valores.append(1)
+        for k in range(K):
+           for l in range(L):
+              indices.append(f"alfa_{j}_{k}_{l}")
+              valores.append(-float(instancia.ordenes[j].cant_trab))
         fila = [indices, valores]
         restricciones.append(fila)
-        sentidos.append('E')  # 'E' para igualdad
-        rhs.append(float(instancia.ordenes[j].cant_trab))  
+        sentidos.append('E') 
+        rhs.append(0)  
         nombres.append(f"trabajadores_necesarios_orden_{j}")    
    
     #Agrego las restriccion de que una orden se realiza en un solo turno, una sola vez
@@ -535,6 +540,8 @@ def mostrar_solucion(prob,instancia):
 
 def main():
     
+    start = time.time()
+
     # Lectura de datos desde el archivo de entrada
     instancia = cargar_instancia()
     
@@ -549,6 +556,9 @@ def main():
 
     # Obtencion de la solucion
     mostrar_solucion(prob,instancia)
+
+    end = time.time()
+    print("Tiempo de ejecucion: ", end-start)
 
 if __name__ == '__main__':
     main()
