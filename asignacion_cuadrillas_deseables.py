@@ -2,6 +2,7 @@ import sys
 #importamos el modulo cplex
 import cplex
 from recordclass import recordclass
+import time
 
 TOLERANCE =10e-6 
 Orden = recordclass('Orden', 'id beneficio cant_trab')
@@ -140,6 +141,20 @@ def agregar_variables(prob, instancia):
         for n in range(1, 4):
             coeficientes_funcion_objetivo.append(0.0)  # 0 porque no esta en la funcion objetivo
             nombres.append(f"gamma_{i}_{n}")
+            tipos.append('B')
+
+    # Variables epsilon_ii*j
+    for (i,i_) in instancia.conflictos_trabajadores:
+        for j in range(O):
+            coeficientes_funcion_objetivo.append(-1000.0)
+            nombres.append(f"psilon_{i}_{i_}_{j}")
+            tipos.append('B')
+
+    # Variables mu_ijj*
+    for i in range(T):
+        for (j,j_) in instancia.ordenes_repetitivas:
+            coeficientes_funcion_objetivo.append(-1000.0)
+            nombres.append(f"mu_{i}_{j}_{j_}")
             tipos.append('B')
 
     # Variables c_i_n
@@ -377,7 +392,49 @@ def agregar_restricciones(prob, instancia):
   
 # Deseables 
 # Conflictos entre trabajadores
+    for j in range(O):
+        for (i, i_) in instancia.conflictos_trabajadores :  
+            # Restricción 1
+            indices = [f"psilon_{i}_{i_}_{j}", f"delta_{i}_{j}", f"delta_{i_}_{j}"]
+            valores = [2, -1, -1]
+            fila = [indices, valores]
+            restricciones.append(fila)
+            sentidos.append('L')  # 'L' para menor o igual
+            rhs.append(0)
+            nombres.append(f"conflicto_trabajadores_(restriccion_1)_{i}_{i_}_{j}")
+            
+            # Restricción 2
+            indices = [f"psilon_{i}_{i_}_{j}", f"delta_{i}_{j}", f"delta_{i_}_{j}"]
+            valores = [-1, 1, 1]
+            fila = [indices, valores]
+            restricciones.append(fila)
+            sentidos.append('L')  # 'L' para menor o igual
+            rhs.append(1)
+            nombres.append(f"conflicto_trabajadores_(restriccion_2)_{i}_{i_}_{j}")
+
 # Pares de órdenes repetitivas
+    for (j,j_) in instancia.ordenes_repetitivas:
+        for i in range(T) :  
+            # Restricción 1
+            indices = [f"mu_{i}_{j}_{j_}", f"delta_{i}_{j}", f"delta_{i}_{j_}"]
+            valores = [2, -1, -1]
+            fila = [indices, valores]
+            restricciones.append(fila)
+            sentidos.append('L')  # 'L' para menor o igual
+            rhs.append(0)
+            nombres.append(f"ordenes_repetitivas_(restriccion_1)_{i}_{i_}_{j}")
+            
+            # Restricción 2
+            indices = [f"mu_{i}_{j}_{j_}", f"delta_{i}_{j}", f"delta_{i}_{j_}"]
+            valores = [-1, 1, 1]
+            fila = [indices, valores]
+            restricciones.append(fila)
+            sentidos.append('L')  # 'L' para menor o igual
+            rhs.append(1)
+            nombres.append(f"ordenes_repetitivas_(restriccion_2)_{i}_{i_}_{j}")
+
+
+
     prob.linear_constraints.add(lin_expr=restricciones, senses=sentidos, rhs=rhs, names=nombres)
 
 def armar_lp(prob, instancia):
@@ -426,6 +483,8 @@ def mostrar_solucion(prob,instancia):
 
 def main():
     
+    start = time.time()
+
     # Lectura de datos desde el archivo de entrada
     instancia = cargar_instancia()
     
@@ -439,7 +498,11 @@ def main():
     resolver_lp(prob)
 
     # Obtencion de la solucion
-    #mostrar_solucion(prob,instancia)
+    mostrar_solucion(prob,instancia)
+
+    end = time.time()
+    print("Tiempo de ejecucion: ", end-start)
 
 if __name__ == '__main__':
     main()
+
