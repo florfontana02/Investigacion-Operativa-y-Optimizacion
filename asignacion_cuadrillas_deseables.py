@@ -375,7 +375,7 @@ def agregar_restricciones(prob, instancia):
             nombres.append(f"Orden {i} con t_{i} trabajadores asignados en el mismo turno")
   
   # Diferencia entre trabajador que mas y menos tareas realizaron menor a 8
-# version mejorada 
+
 # defino maximo z
     for i in range(T):
       indices = ["z"]
@@ -624,7 +624,9 @@ def main():
     mostrar_solucion(prob,instancia)
 
     end = time.time()
-    print("Tiempo de ejecucion: ", end-start)
+    total_time = end - start
+    total_minutes = total_time / 60
+    print(f"Tiempo de ejecucion: {total_minutes:.2f} minutos")
 
 if __name__ == '__main__':
     main()

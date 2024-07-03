@@ -1,25 +1,24 @@
 import random
 
-# Generate the file
 with open('output.txt', 'w') as f:
     # cantidad trabajadores T
-    T = random.randint(30,50)
+    T = random.randint(5,10)
     f.write(f"{T}\n")
 
     # cantidad órdenes O
     #O = random.randint(120,150)
-    O = random.randint(40,80)
+    O = 100
     f.write(f"{O}\n")
 
     # siguientes O líneas: dicen el índice de la orden, su beneficio, y la cantidad de trabajadores que requiere
     for i in range(O):
         col1 = i
-        col2 = random.randint(1000, 100000)
-        col3 = random.randint(1, 10)
+        col2 = random.randint(1000, 10000)
+        col3 = random.randint(1, 5)
         f.write(f"{col1} {col2} {col3}\n")
 
     # cantidad de conflictos entre trabajadores
-    C = random.randint(0, 5)
+    C = random.randint(0, T/2)
     f.write(f"{C}\n")
 
     # enumero los pares de conflictos entre trabajadores
@@ -28,7 +27,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{a} {b}\n")
 
     # cantidad de ordenes correlativas
-    R = random.randint(0, 10)
+    R = random.randint(0, 5)
     f.write(f"{R}\n")
 
     # enumero pares de órdenes correlativas
@@ -37,7 +36,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{a} {b}\n")
 
     # cantidad de órdenes conflictivas
-    F = random.randint(0, 10)
+    F = random.randint(0, 5)
     f.write(f"{F}\n")
 
     # enumero pares de órdenes conflictivas
@@ -46,7 +45,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{a} {b}\n")
 
     # cantidad de órdenes repetitivas
-    P = random.randint(0, 10)
+    P = random.randint(0, 5)
     f.write(f"{P}\n")
 
     # enumero pares de órdenes repetitivas
