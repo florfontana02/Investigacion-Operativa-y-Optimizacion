@@ -2,7 +2,7 @@ import random
 
 with open('output.txt', 'w') as f:
     # cantidad trabajadores T
-    T = random.randint(5,10)
+    T = random.randint(5,50)
     f.write(f"{T}\n")
 
     # cantidad órdenes O
@@ -18,7 +18,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{col1} {col2} {col3}\n")
 
     # cantidad de conflictos entre trabajadores
-    C = random.randint(0, T/2)
+    C = random.randint(1, T)
     f.write(f"{C}\n")
 
     # enumero los pares de conflictos entre trabajadores
@@ -27,7 +27,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{a} {b}\n")
 
     # cantidad de ordenes correlativas
-    R = random.randint(0, 5)
+    R = random.randint(1, 6)
     f.write(f"{R}\n")
 
     # enumero pares de órdenes correlativas
@@ -36,7 +36,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{a} {b}\n")
 
     # cantidad de órdenes conflictivas
-    F = random.randint(0, 5)
+    F = random.randint(1, 6)
     f.write(f"{F}\n")
 
     # enumero pares de órdenes conflictivas
@@ -45,7 +45,7 @@ with open('output.txt', 'w') as f:
         f.write(f"{a} {b}\n")
 
     # cantidad de órdenes repetitivas
-    P = random.randint(0, 5)
+    P = random.randint(1, 6)
     f.write(f"{P}\n")
 
     # enumero pares de órdenes repetitivas
