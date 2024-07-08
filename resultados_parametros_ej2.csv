@@ -1,0 +1,17 @@
+Parámetro,Valor,Tiempo (s),Objetivo,Nodos,Brecha (%)
+mip.strategy.nodeselect,0.0,243.62119555473328,196686.0,0,0.0
+mip.strategy.nodeselect,1.0,226.7402617931366,196686.0,0,0.0
+mip.strategy.nodeselect,2.0,224.4605884552002,196686.0,0,0.0
+mip.strategy.nodeselect,3.0,223.64017820358276,196686.0,0,0.0
+mip.strategy.variableselect,-1.0,227.35475063323975,196686.0,0,0.0
+mip.strategy.variableselect,0.0,223.16314244270325,196686.0,0,0.0
+mip.strategy.variableselect,1.0,231.920494556427,196686.0,0,0.0
+mip.strategy.variableselect,2.0,220.40355324745178,196686.0,0,0.0
+mip.strategy.variableselect,3.0,231.2300853729248,196686.0,0,0.0
+mip.strategy.variableselect,4.0,240.6038534641266,196686.0,0,0.0
+preprocessing.presolve,0.0,131.30465483665466,196686.0,0,0.0
+preprocessing.presolve,1.0,223.83421325683594,196686.0,0,0.0
+mip.strategy.heuristiceffort,0.0,1016.7204775810242,196686.0,1369,0.0
+mip.strategy.heuristiceffort,0.5,229.50760102272034,196686.0,0,0.0
+mip.strategy.heuristiceffort,1.0,239.30837035179138,196686.0,0,0.0
+mip.strategy.heuristiceffort,2.0,161.80106258392334,196686.0,0,0.0

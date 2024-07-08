@@ -548,12 +548,6 @@ def main():
     # Lectura de datos desde el archivo de entrada
     instancia = cargar_instancia()
     
-    # Definicion del problema de Cplex
-    prob = cplex.Cplex()
-    
-    # Definicion del modelo
-    armar_lp(prob,instancia)
-  
     # Resolucion del modelo
    # resolver_lp(prob, configuracion)
 
@@ -578,6 +572,16 @@ def main():
     # Probar cada parámetro por separado
     for parametro, valores in parametros.items():
         for valor in valores:
+            
+            # Definicion del problema de Cplex
+            prob = cplex.Cplex()
+    
+            # Definicion del modelo
+            armar_lp(prob,instancia)
+
+            nombre_archivo = sys.argv[1].strip()
+  
+
             configuracion = configuracion_base.copy()
             configuracion[parametro] = valor
             
@@ -592,11 +596,18 @@ def main():
                 "Brecha (%)": brecha * 100,
             })
 
+            # Cierro cplex para borrar datos de memoria 
+            prob.end()
+
+            os._exit # Cierro python para borrar el cache (male, no se si esto va a funcionar)
+
+
+
     # Convertir resultados a DataFrame
     df_resultados = pd.DataFrame(resultados)
 
     # Guardar resultados a archivo CSV
-    df_resultados.to_csv("resultados_parametros.csv", index=False)
+    df_resultados.to_csv(f"resultados_parametros_{nombre_archivo}.csv", index=False)
         # Obtencion de la solucion
         # mostrar_solucion(prob,instancia)
 
